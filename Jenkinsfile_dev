@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+tools {
+   flutter '3.7.7'
+}
+
+parameters {
+  choice choices: ['DEV', 'view'], name: 'ENVIRONMENT'
+  string defaultValue: 'master', name: 'BRANCH'
+}
+
+    stages {
+        stage('CheckOut') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build') {
+            when {
+                expression {
+                   return params.ENVIRONMENT == 'DEV'
+                }
+            }
+            steps {
+                 sh 'flutter build apk --debug'
+
+                 echo "Build completed Successfully"
+
+            }
+        }
+
+
+
+    }
+}
